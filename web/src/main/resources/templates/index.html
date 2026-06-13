@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>RFM Customer Analytics — Trang Chủ</title>
+    <meta name="description" content="Hệ thống phân cụm khách hàng RFM &amp; K-Means — Phân tích, trực quan hóa và tối ưu chiến lược marketing."/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="navbar-brand">
+        <span class="brand-icon">📊</span>
+        <span class="brand-text">RFM Analytics</span>
+    </div>
+    <ul class="navbar-menu">
+        <li><a th:href="@{/}" class="active" id="nav-home">🏠 Trang Chủ</a></li>
+        <li sec:authorize="isAuthenticated()"><a th:href="@{/order}" id="nav-order">🛒 Đặt Hàng</a></li>
+        <li sec:authorize="hasRole('ADMIN')"><a th:href="@{/orders}" id="nav-orders">📦 Quản Lý Đơn Hàng</a></li>
+        <li sec:authorize="hasRole('ADMIN')"><a th:href="@{/dashboard}" id="nav-dashboard">📈 Dashboard</a></li>
+        <li sec:authorize="hasRole('ADMIN')"><a th:href="@{/customers}" id="nav-customers">👥 Khách Hàng</a></li>
+    </ul>
+    <div class="navbar-user" sec:authorize="isAuthenticated()" style="display: flex; align-items: center; gap: 15px; margin-left: auto;">
+        <span style="font-size: 14px; font-weight: 500; color: #1e293b;">
+            Xin chào, <b sec:authentication="name" style="color: #2563eb;"></b>
+        </span>
+        <form th:action="@{/logout}" method="post" style="margin: 0;">
+            <button type="submit" style="background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600;">Đăng xuất</button>
+        </form>
+    </div>
+    <div class="navbar-user" sec:authorize="!isAuthenticated()" style="margin-left: auto;">
+        <a th:href="@{/login}" style="background: #2563eb; color: white; text-decoration: none; padding: 8px 16px; border-radius: 6px; font-weight: 500; font-size: 14px; box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);">Đăng nhập</a>
+    </div>
+</nav>
+
+<main class="main-content" style="background-color: #ffffff; padding-top: 0;">
+
+    <!-- SAAS HERO SECTION -->
+    <section style="padding: 100px 20px; text-align: center; max-width: 900px; margin: 0 auto;">
+        <div style="display: inline-block; padding: 6px 12px; background: #f1f5f9; color: #475569; font-size: 13px; font-weight: 600; border-radius: 20px; margin-bottom: 24px; border: 1px solid #e2e8f0;">
+            Phiên bản 1.0 — Tích hợp K-Means Clustering
+        </div>
+        <h1 style="font-size: 3.5rem; font-weight: 800; color: #0f172a; line-height: 1.1; margin-bottom: 24px; letter-spacing: -0.02em;">
+            Thấu hiểu khách hàng.<br/>Tối ưu doanh thu.
+        </h1>
+        <p style="font-size: 1.25rem; color: #475569; line-height: 1.6; max-width: 700px; margin: 0 auto 40px;">
+            Nền tảng phân tích dữ liệu ứng dụng mô hình RFM và thuật toán học máy K-Means. Tự động phân cụm khách hàng, giúp doanh nghiệp đưa ra quyết định kinh doanh chính xác.
+        </p>
+        <div style="display: flex; gap: 16px; justify-content: center;">
+            <a th:href="@{/dashboard}" style="background-color: #0f172a; color: #ffffff; padding: 14px 28px; font-size: 16px; font-weight: 500; border-radius: 8px; text-decoration: none; transition: background-color 0.2s;">
+                Truy cập Dashboard
+            </a>
+            <a th:href="@{/order}" style="background-color: #ffffff; color: #0f172a; padding: 14px 28px; font-size: 16px; font-weight: 500; border-radius: 8px; text-decoration: none; border: 1px solid #cbd5e1; transition: border-color 0.2s;">
+                Tạo giao dịch mới
+            </a>
+        </div>
+    </section>
+
+    <!-- METRICS EXPLANATION -->
+    <section style="background-color: #f8fafc; padding: 80px 20px; border-top: 1px solid #e2e8f0;">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <div style="text-align: center; margin-bottom: 60px;">
+                <h2 style="font-size: 2.25rem; font-weight: 700; color: #0f172a; margin-bottom: 16px;">Phân tích 3 chiều dữ liệu (RFM)</h2>
+                <p style="font-size: 1.125rem; color: #64748b;">Phương pháp tiêu chuẩn công nghiệp để đánh giá giá trị vòng đời khách hàng.</p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 32px;">
+                <div style="background: #ffffff; padding: 32px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+                    <div style="width: 48px; height: 48px; background: #f1f5f9; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; color: #334155; margin-bottom: 20px;">R</div>
+                    <h3 style="font-size: 1.25rem; font-weight: 600; color: #0f172a; margin-bottom: 12px;">Recency (Độ mới)</h3>
+                    <p style="color: #475569; line-height: 1.5;">Đo lường khoảng thời gian kể từ lần mua hàng cuối cùng. Khách hàng giao dịch gần đây có khả năng quay lại cao hơn.</p>
+                </div>
+                
+                <div style="background: #ffffff; padding: 32px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+                    <div style="width: 48px; height: 48px; background: #f1f5f9; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; color: #334155; margin-bottom: 20px;">F</div>
+                    <h3 style="font-size: 1.25rem; font-weight: 600; color: #0f172a; margin-bottom: 12px;">Frequency (Tần suất)</h3>
+                    <p style="color: #475569; line-height: 1.5;">Tổng số lần giao dịch. Phản ánh mức độ trung thành và sự tương tác thường xuyên của khách hàng với doanh nghiệp.</p>
+                </div>
+                
+                <div style="background: #ffffff; padding: 32px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+                    <div style="width: 48px; height: 48px; background: #f1f5f9; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; color: #334155; margin-bottom: 20px;">M</div>
+                    <h3 style="font-size: 1.25rem; font-weight: 600; color: #0f172a; margin-bottom: 12px;">Monetary (Giá trị)</h3>
+                    <p style="color: #475569; line-height: 1.5;">Tổng số tiền khách hàng đã chi tiêu. Chỉ số trực tiếp đánh giá giá trị kinh tế mà khách hàng mang lại.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CUSTOMER SEGMENTS -->
+    <section style="padding: 80px 20px;">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 40px;">
+                <div style="flex: 1; min-width: 300px;">
+                    <h2 style="font-size: 2.25rem; font-weight: 700; color: #0f172a; margin-bottom: 20px;">4 Nhóm Khách Hàng Cốt Lõi</h2>
+                    <p style="font-size: 1.125rem; color: #64748b; line-height: 1.6; margin-bottom: 32px;">
+                        Hệ thống tự động gom nhóm khách hàng bằng thuật toán AI, giúp team Marketing triển khai các chiến dịch cá nhân hóa, tối ưu chi phí và tăng tỷ lệ chuyển đổi.
+                    </p>
+                    <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 16px;">
+                        <li style="display: flex; align-items: flex-start; gap: 12px;">
+                            <span style="font-size: 20px;">🏆</span>
+                            <div>
+                                <strong style="color: #0f172a; display: block; margin-bottom: 4px;">VIP (Champions)</strong>
+                                <span style="color: #475569; font-size: 14px;">Khách hàng giá trị nhất, mua thường xuyên và chi tiêu cao. Cần chế độ chăm sóc đặc quyền.</span>
+                            </div>
+                        </li>
+                        <li style="display: flex; align-items: flex-start; gap: 12px;">
+                            <span style="font-size: 20px;">💎</span>
+                            <div>
+                                <strong style="color: #0f172a; display: block; margin-bottom: 4px;">Khách hàng Thường xuyên</strong>
+                                <span style="color: #475569; font-size: 14px;">Nguồn thu nhập ổn định. Nhóm mục tiêu hoàn hảo cho Upsell và Cross-sell.</span>
+                            </div>
+                        </li>
+                        <li style="display: flex; align-items: flex-start; gap: 12px;">
+                            <span style="font-size: 20px;">🌱</span>
+                            <div>
+                                <strong style="color: #0f172a; display: block; margin-bottom: 4px;">Khách hàng Mới / Tiềm năng</strong>
+                                <span style="color: #475569; font-size: 14px;">Có tương tác gần đây nhưng tần suất thấp. Cần các chương trình khuyến mãi để kích cầu.</span>
+                            </div>
+                        </li>
+                        <li style="display: flex; align-items: flex-start; gap: 12px;">
+                            <span style="font-size: 20px;">📉</span>
+                            <div>
+                                <strong style="color: #0f172a; display: block; margin-bottom: 4px;">Rời bỏ / Nguy cơ cao</strong>
+                                <span style="color: #475569; font-size: 14px;">Lâu không quay lại giao dịch. Cần chiến dịch Reactivation để lôi kéo họ trở lại.</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div style="flex: 1; min-width: 300px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 40px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                    <div style="font-size: 64px; margin-bottom: 20px;">🤖</div>
+                    <h3 style="font-size: 1.5rem; font-weight: 600; color: #0f172a; margin-bottom: 12px;">Được hỗ trợ bởi K-Means</h3>
+                    <p style="color: #475569; line-height: 1.5; font-size: 15px;">
+                        Không còn phân loại thủ công dựa trên cảm tính. Thuật toán học máy K-Means tự động tìm ra ranh giới giữa các nhóm dựa trên khoảng cách dữ liệu thực tế.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer class="footer">
+    <p>RFM Customer Analytics &copy; 2026 — Hệ thống Phân Cụm Khách Hàng K-Means</p>
+</footer>
+
+</body>
+</html>

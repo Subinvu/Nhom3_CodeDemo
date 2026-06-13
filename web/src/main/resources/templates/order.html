@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Form Đặt Hàng</title>
+    <!-- Keep global style for navbar -->
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <!-- Order form specific style overriding layout -->
+    <link rel="stylesheet" th:href="@{/css/order-form.css}" />
+  </head>
+  <body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <span class="brand-icon">📊</span>
+            <span class="brand-text">RFM Analytics</span>
+        </div>
+        <ul class="navbar-menu">
+            <li><a th:href="@{/}" id="nav-home">🏠 Trang Chủ</a></li>
+            <li sec:authorize="isAuthenticated()"><a th:href="@{/order}" class="active" id="nav-order">🛒 Đặt Hàng</a></li>
+            <li sec:authorize="hasRole('ADMIN')"><a th:href="@{/orders}" id="nav-orders">📦 Quản Lý Đơn Hàng</a></li>
+            <li sec:authorize="hasRole('ADMIN')"><a th:href="@{/dashboard}" id="nav-dashboard">📈 Dashboard</a></li>
+            <li sec:authorize="hasRole('ADMIN')"><a th:href="@{/customers}" id="nav-customers">👥 Khách Hàng</a></li>
+        </ul>
+        <div class="navbar-user" sec:authorize="isAuthenticated()" style="display: flex; align-items: center; gap: 15px; margin-left: auto;">
+            <span style="font-size: 14px; font-weight: 500; color: #1e293b;">
+                Xin chào, <b sec:authentication="name" style="color: #2563eb;"></b>
+            </span>
+            <form th:action="@{/logout}" method="post" style="margin: 0;">
+                <button type="submit" style="background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600;">Đăng xuất</button>
+            </form>
+        </div>
+        <div class="navbar-user" sec:authorize="!isAuthenticated()" style="margin-left: auto;">
+            <a th:href="@{/login}" style="background: #2563eb; color: white; text-decoration: none; padding: 8px 16px; border-radius: 6px; font-weight: 500; font-size: 14px; box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);">Đăng nhập</a>
+        </div>
+    </nav>
+
+    <div class="container">
+      <header class="page-header">
+        <h1>Form Đặt Hàng Online Retail</h1>
+        <p>Nhập thông tin khách hàng, chọn số lượng sản phẩm và gửi dữ liệu sang Backend Java.</p>
+      </header>
+
+      <main class="layout">
+        <section class="card">
+          <h2>Thông tin khách hàng</h2>
+
+          <form id="order-form" novalidate>
+            <div class="form-group" style="display: flex; gap: 10px; align-items: flex-end;">
+              <div style="flex: 1;">
+                <label for="search-phone">Tra cứu bằng Số điện thoại</label>
+                <input
+                  id="search-phone"
+                  name="searchPhone"
+                  type="tel"
+                  inputmode="numeric"
+                  placeholder="0901234567"
+                />
+              </div>
+              <button type="button" id="btn-search-customer" class="btn-form secondary-button" style="width: auto; height: 44px; padding: 0 15px;">🔍 Kiểm tra</button>
+            </div>
+            
+            <div id="ai-suggestion-badge" style="display: none; padding: 12px; border-radius: 8px; margin-bottom: 20px; font-weight: 500; font-size: 14px;"></div>
+
+            <div class="form-group">
+              <label for="customer-name">Họ và tên</label>
+              <input
+                id="customer-name"
+                name="customerName"
+                type="text"
+                placeholder="Nguyễn Văn A"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="customer-email">Email</label>
+              <input
+                id="customer-email"
+                name="email"
+                type="email"
+                placeholder="vana@email.com"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="customer-phone">Số điện thoại (Sẽ được lưu)</label>
+              <input
+                id="customer-phone"
+                name="phone"
+                type="tel"
+                inputmode="numeric"
+                placeholder="0901234567"
+                required
+              />
+            </div>
+
+            <h2>Danh sách sản phẩm</h2>
+            <div id="product-list" class="product-list" aria-live="polite"></div>
+            
+            <button type="button" id="btn-add-product" class="btn-form secondary-button" style="margin-bottom: 20px;">➕ Thêm sản phẩm</button>
+            
+            <div style="font-size: 18px; font-weight: bold; text-align: right; margin-bottom: 20px;">
+                Tổng cộng: <span id="grandTotal" style="color: #2563eb;">£0</span>
+            </div>
+
+            <div class="button-row">
+              <button id="submit-button" class="btn-form" type="submit">Submit</button>
+              <button id="reset-button" type="button" class="btn-form secondary-button">Reset</button>
+            </div>
+
+            <p id="form-status" class="form-status" role="status" aria-live="polite"></p>
+          </form>
+        </section>
+
+        <section class="card" id="result-card" style="display: none;">
+            <h2>Kết quả K-Means & RFM</h2>
+            <p id="res-cluster" style="font-weight: bold; font-size: 18px; margin-bottom: 10px;"></p>
+            <p id="res-rfm"></p>
+        </section>
+      </main>
+    </div>
+
+    <script th:src="@{/js/order.js}"></script>
+  </body>
+</html>

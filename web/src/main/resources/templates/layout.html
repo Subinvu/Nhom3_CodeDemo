@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title th:text="${pageTitle != null ? pageTitle + ' — RFM Analytics' : 'RFM Customer Analytics'}">RFM Analytics</title>
+    <meta name="description" th:content="${pageDescription != null ? pageDescription : 'Hệ thống phân cụm khách hàng RFM &amp; K-Means'}"/>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <!-- Chart.js -->
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <th:block th:replace="${headExtra}"></th:block>
+</head>
+<body>
+
+<!-- ── NAVBAR ───────────────────────────────────── -->
+<nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="navbar-brand">
+        <span class="brand-icon">📊</span>
+        <span class="brand-text">RFM Analytics</span>
+    </div>
+    <ul class="navbar-menu">
+        <li sec:authorize="hasRole('ADMIN')">
+            <a th:href="@{/}" th:classappend="${activePage == 'home'} ? 'active'" id="nav-home">
+                🏠 Trang Chủ
+            </a>
+        </li>
+        <li sec:authorize="isAuthenticated()">
+            <a th:href="@{/order}" th:classappend="${activePage == 'order'} ? 'active'" id="nav-order">
+                🛒 Đặt Hàng
+            </a>
+        </li>
+        <li sec:authorize="hasRole('ADMIN')">
+            <a th:href="@{/orders}" th:classappend="${activePage == 'orders'} ? 'active'" id="nav-orders">
+                📦 Quản Lý Đơn Hàng
+            </a>
+        </li>
+        <li sec:authorize="hasRole('ADMIN')">
+            <a th:href="@{/dashboard}" th:classappend="${activePage == 'dashboard'} ? 'active'" id="nav-dashboard">
+                📈 Dashboard
+            </a>
+        </li>
+        <li sec:authorize="hasRole('ADMIN')">
+            <a th:href="@{/customers}" th:classappend="${activePage == 'customers'} ? 'active'" id="nav-customers">
+                👥 Khách Hàng
+            </a>
+        </li>
+    </ul>
+    <div class="navbar-user" sec:authorize="isAuthenticated()" style="display: flex; align-items: center; gap: 15px; margin-left: auto;">
+        <span style="font-size: 14px; font-weight: 500; color: #1e293b;">
+            Xin chào, <b sec:authentication="name" style="color: #2563eb;"></b>
+        </span>
+        <form th:action="@{/logout}" method="post" style="margin: 0;">
+            <button type="submit" style="background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600;">Đăng xuất</button>
+        </form>
+    </div>
+    <div class="navbar-user" sec:authorize="!isAuthenticated()" style="margin-left: auto;">
+        <a th:href="@{/login}" style="background: #2563eb; color: white; text-decoration: none; padding: 8px 16px; border-radius: 6px; font-weight: 500; font-size: 14px; box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);">Đăng nhập</a>
+    </div>
+</nav>
+
+<!-- ── MAIN CONTENT ─────────────────────────────── -->
+<main class="main-content">
+    <th:block th:replace="${content}"></th:block>
+</main>
+
+<!-- ── FOOTER ───────────────────────────────────── -->
+<footer class="footer">
+    <p>RFM Customer Analytics &copy; 2026 — Hệ thống Phân Cụm Khách Hàng K-Means</p>
+</footer>
+
+<th:block th:replace="${scripts}"></th:block>
+</body>
+</html>
